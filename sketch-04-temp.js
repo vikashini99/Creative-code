@@ -1,8 +1,7 @@
-// Importing modules using ES module syntax
 import canvasSketch from 'https://unpkg.com/canvas-sketch@latest/build/canvas-sketch.umd.js';
 import * as random from 'https://unpkg.com/canvas-sketch-util/random.js';
 import * as math from 'https://unpkg.com/canvas-sketch-util/math.js';
-import * as dat from 'https://unpkg.com/dat.gui/build/dat.gui.js'; // Import dat.gui
+import * as dat from 'https://unpkg.com/dat.gui/build/dat.gui.js';  // Import dat.gui
 
 const settings = {
   dimensions: [1080, 1080],
@@ -89,6 +88,5 @@ const createGUI = () => {
   folder.add(params, 'frame', 0, 999);
 };
 
-// Create GUI and start the sketch
 createGUI();
 canvasSketch(sketch, settings);

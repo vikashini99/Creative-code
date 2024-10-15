@@ -7,6 +7,7 @@ const settings = {
   dimensions: [1080, 1080],
   animate: true
 };
+// Updated sketch-04.js
 
 const params = {
   cols: 10,

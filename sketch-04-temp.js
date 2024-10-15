@@ -1,13 +1,13 @@
-const canvasSketch = require('canvas-sketch');
-const random = require('canvas-sketch-util/random');
-const math = require('canvas-sketch-util/math');
-const dat = require('dat.gui');  // Import dat.gui
+// Importing modules using ES module syntax
+import canvasSketch from 'https://unpkg.com/canvas-sketch@latest/build/canvas-sketch.umd.js';
+import * as random from 'https://unpkg.com/canvas-sketch-util/random.js';
+import * as math from 'https://unpkg.com/canvas-sketch-util/math.js';
+import * as dat from 'https://unpkg.com/dat.gui/build/dat.gui.js'; // Import dat.gui
 
 const settings = {
   dimensions: [1080, 1080],
   animate: true
 };
-// Updated sketch-04.js
 
 const params = {
   cols: 10,
@@ -89,5 +89,6 @@ const createGUI = () => {
   folder.add(params, 'frame', 0, 999);
 };
 
+// Create GUI and start the sketch
 createGUI();
 canvasSketch(sketch, settings);

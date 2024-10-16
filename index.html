@@ -11,101 +11,106 @@
 </head>
 <body>
   <script>
+    // Sketch settings
     const settings = {
-      dimensions: [1080, 1080],
-      animate: true
+      dimensions: [1080, 1080], // Set canvas dimensions
+      animate: true             // Enable animation
     };
 
+    // Parameter object for GUI controls
     const params = {
       cols: 10,
       rows: 10,
-      scaleMin: 1,
-      scaleMax: 30,
-      freq: 0.001,
-      amp: 0.2,
-      frame: 0,
-      animate: true,
-      lineCap: 'butt'
+      scaleMin: 10,              // Make sure these aren't too small
+      scaleMax: 50,              // Adjusted for better visibility
+      freq: 0.001,               // Frequency for noise
+      amp: 0.2,                  // Amplitude for noise
+      animate: true,             // Toggle animation
+      frame: 0,                  // Frame value for noise calculation
+      lineCap: 'round'           // Line cap style
     };
 
+    // Main sketch function
     const sketch = () => {
       return ({ context, width, height, frame }) => {
-        // Fill the background to make sure the canvas is rendered
-        context.fillStyle = 'lightgray'; // Change this to any color to ensure canvas visibility
-        context.fillRect(0, 0, width, height);
+        // Fill the canvas background
+        context.fillStyle = 'white'; // Set canvas background to white
+        context.fillRect(0, 0, width, height); // Fill canvas
 
+        // Set up grid
         const cols = params.cols;
         const rows = params.rows;
         const numCells = cols * rows;
 
-        const gridw = width * 0.8;
-        const gridh = height * 0.8;
-        const cellw = gridw / cols;
-        const cellh = gridh / rows;
-        const margx = (width - gridw) * 0.5;
-        const margy = (height - gridh) * 0.5;
+        // Calculate cell and margin sizes
+        const gridWidth = width * 0.8;
+        const gridHeight = height * 0.8;
+        const cellWidth = gridWidth / cols;
+        const cellHeight = gridHeight / rows;
+        const marginX = (width - gridWidth) * 0.5;
+        const marginY = (height - gridHeight) * 0.5;
 
+        // Loop through each cell
         for (let i = 0; i < numCells; i++) {
           const col = i % cols;
           const row = Math.floor(i / cols);
 
-          const x = col * cellw;
-          const y = row * cellh;
-          const w = cellw * 0.8;
-          const h = cellh * 0.8;
+          // Calculate position of each cell
+          const x = col * cellWidth;
+          const y = row * cellHeight;
 
-          const f = params.animate ? frame : params.frame;
+          const f = params.animate ? frame : params.frame;  // Frame for animation
 
-          // Get noise value for the current cell
-          const n = random.noise3D(x, y, f * 10, params.freq);
-          const angle = n * Math.PI * params.amp;
-          const scale = math.mapRange(n, -1, 1, params.scaleMin, params.scaleMax);
+          // Get noise value and angle based on noise function
+          const n = random.noise3D(x, y, f * 10, params.freq); // Noise function
+          const angle = n * Math.PI * params.amp; // Calculate angle
+          const scale = math.mapRange(n, -1, 1, params.scaleMin, params.scaleMax); // Scale for line width
 
-          // Log values to check if the loop is running correctly
-          console.log(`Drawing line at (${x}, ${y}) with angle ${angle} and scale ${scale}`);
-
-          // Save the state of the context before transformation
+          // Save the state of the context
           context.save();
-          context.translate(x, y);
-          context.translate(margx, margy);
-          context.translate(cellw * 0.5, cellh * 0.5);
-          context.rotate(angle);
 
+          // Translate and rotate the canvas to draw rotated lines
+          context.translate(x + marginX + cellWidth / 2, y + marginY + cellHeight / 2);
+          context.rotate(angle); // Apply rotation
+
+          // Set line style
           context.lineWidth = scale;
           context.lineCap = params.lineCap;
+          context.strokeStyle = 'black'; // Ensure stroke is visible
 
+          // Draw the line
           context.beginPath();
-          context.moveTo(w * -0.5, 0);
-          context.lineTo(w * 0.5, 0);
-          context.strokeStyle = 'black'; // Make sure lines are drawn in black to be visible
+          context.moveTo(-cellWidth * 0.4, 0);
+          context.lineTo(cellWidth * 0.4, 0);
           context.stroke();
 
-          // Restore the context to its original state
+          // Restore the context to avoid affecting subsequent drawings
           context.restore();
         }
       };
     };
 
+    // Create GUI to tweak parameters
     const createGUI = () => {
       const gui = new dat.GUI();
-      let folder;
 
-      folder = gui.addFolder('Grid');
-      folder.add(params, 'lineCap', ['butt', 'round', 'square']);
-      folder.add(params, 'cols', 2, 50, 1);
-      folder.add(params, 'rows', 2, 50, 1);
-      folder.add(params, 'scaleMin', 1, 100);
-      folder.add(params, 'scaleMax', 1, 100);
+      const folder = gui.addFolder('Grid Settings');
+      folder.add(params, 'cols', 2, 50, 1).name('Columns');
+      folder.add(params, 'rows', 2, 50, 1).name('Rows');
+      folder.add(params, 'scaleMin', 1, 100).name('Scale Min');
+      folder.add(params, 'scaleMax', 1, 100).name('Scale Max');
+      folder.open();
 
-      folder = gui.addFolder('Noise');
-      folder.add(params, 'freq', -0.01, 0.01);
-      folder.add(params, 'amp', 0, 1);
-      folder.add(params, 'animate');
-      folder.add(params, 'frame', 0, 999);
+      const noiseFolder = gui.addFolder('Noise Settings');
+      noiseFolder.add(params, 'freq', 0.0001, 0.01).name('Frequency');
+      noiseFolder.add(params, 'amp', 0, 1).name('Amplitude');
+      noiseFolder.add(params, 'animate').name('Animate');
+      noiseFolder.add(params, 'frame', 0, 999).name('Frame');
+      noiseFolder.open();
     };
 
-    createGUI();
-    canvasSketch(sketch, settings);
+    createGUI();  // Initialize GUI
+    canvasSketch(sketch, settings);  // Run the sketch
   </script>
 </body>
 </html>

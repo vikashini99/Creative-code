@@ -30,7 +30,8 @@
 
     const sketch = () => {
       return ({ context, width, height, frame }) => {
-        context.fillStyle = 'white';
+        // Fill the background to make sure the canvas is rendered
+        context.fillStyle = 'lightgray'; // Change this to any color to ensure canvas visibility
         context.fillRect(0, 0, width, height);
 
         const cols = params.cols;
@@ -55,10 +56,15 @@
 
           const f = params.animate ? frame : params.frame;
 
+          // Get noise value for the current cell
           const n = random.noise3D(x, y, f * 10, params.freq);
           const angle = n * Math.PI * params.amp;
           const scale = math.mapRange(n, -1, 1, params.scaleMin, params.scaleMax);
 
+          // Log values to check if the loop is running correctly
+          console.log(`Drawing line at (${x}, ${y}) with angle ${angle} and scale ${scale}`);
+
+          // Save the state of the context before transformation
           context.save();
           context.translate(x, y);
           context.translate(margx, margy);
@@ -71,8 +77,10 @@
           context.beginPath();
           context.moveTo(w * -0.5, 0);
           context.lineTo(w * 0.5, 0);
+          context.strokeStyle = 'black'; // Make sure lines are drawn in black to be visible
           context.stroke();
 
+          // Restore the context to its original state
           context.restore();
         }
       };
@@ -101,3 +109,4 @@
   </script>
 </body>
 </html>
+

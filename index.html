@@ -5,17 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Canvas Sketch</title>
   
-  <!-- Load canvas-sketch -->
+  <!-- Load the browser-friendly canvas-sketch library -->
   <script src="https://unpkg.com/canvas-sketch@latest/build/canvas-sketch.umd.js"></script>
   
-  <!-- Load random and math utilities for browser -->
+  <!-- Load random and math utilities that work for the browser -->
   <script src="https://unpkg.com/canvas-sketch-util@1.11.0/build/canvas-sketch-util.umd.js"></script>
   
   <!-- Load dat.gui for GUI controls -->
-  <script src="https://unpkg.com/dat.gui/build/dat.gui.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
 </head>
 <body>
   <script>
+    // Define settings and parameters for your sketch
     const settings = {
       dimensions: [1080, 1080],
       animate: true
@@ -33,6 +34,7 @@
       lineCap: 'butt'
     };
 
+    // Define the sketch function
     const sketch = () => {
       return ({ context, width, height, frame }) => {
         context.fillStyle = 'white';
@@ -83,6 +85,7 @@
       };
     };
 
+    // GUI for tweaking parameters in real-time
     const createGUI = () => {
       const gui = new dat.GUI();
       let folder;
@@ -101,6 +104,7 @@
       folder.add(params, 'frame', 0, 999);
     };
 
+    // Initialize GUI and start the canvas sketch
     createGUI();
     canvasSketch(sketch, settings);
   </script>
